@@ -1,14 +1,56 @@
-import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+// import { goo } from './api/arduino'
 
-const Home: NextPage = () => {
+const Home = () => {
+
+
+  const callback = async (i) => {
+    try {
+      const res = await fetch("/api/arduino"
+        , {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "name": "wesley",
+            "job": i,
+            "job2": "zion residentdfgx",
+            'idv_task_id': 'env local -qwea',
+            "time": Date.now()
+          })
+        }
+      );
+      const data = await res.text();
+      console.log("sd", process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
+    } catch (error) {
+    }
+  };
+
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center py-2">
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      {/* <div class="space3d">
+        <div class="box">
+          <div class="front">F</div>
+          <div class="back">B</div>
+          <div class="top">T</div>
+          <div class="bottom">BT</div>
+          <div class="left">L</div>
+          <div class="right">R</div>
+        </div>
+      </div> */}
+
+      {/* <button onClick={() => go(50)}>50</button>
+      <button onClick={() => go(500)}>500</button>
+      <button onClick={() => go(1000)}>1000</button> */}
+      <button className=" bg-teal-400" onClick={() => callback(500)}>500</button>
+      <button className=" bg-teal-400" onClick={() => callback(50)}>50</button>
 
       <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
         <h1 className="text-6xl font-bold">

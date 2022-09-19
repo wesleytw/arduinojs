@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="Tzeng,Ying-Chi" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <title>Socket.io Test</title>
+  </head>
+  <body>
+    <div class="container pt-4">
+      <h3>Socket.io Test</h3>
+      <form>
+        <div class="form-group">
+          <label for="textInput">輸入文字之後送出！</label>
+          <input
+            type="text"
+            class="form-control"
+            id="textInput"
+            placeholder="Enter Text"
+          />
+          <small id="" class="form-text text-muted"
+            >送出之後去終端機那邊看看～</small
+          >
+        </div>
+        <button type="button" class="btn btn-primary" id="sendMsg">
+          送送送送送～
+        </button>
+      </form>
+    </div>
+    <div id="resBackEnd" class="container pt-4"></div>
+    <nav class="navbar navbar-light bg-light fixed-bottom">
+      Socket.io Communication Test
+      IoT沒那麼難！新手用JavaScript入門做自己的玩具　Tzeng,Ying-Chi
+    </nav>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+      var socket = io.connect();
+      var i = 1;
+
+      socket.on('eventName', function(data) {
+        // Client 端接收到由 Server 端接發出的 eventName 事件
+        $('#resBackEnd').append(
+          '<div class="alert alert-warning" role="alert">' +
+            data.msg +
+            '</div>',
+        );
+        console.log(data.msg);
+      });
+
+      $('#sendMsg').on('click', function() {
+        inputVal = $('#textInput').val();
+        count = i++;
+        socket.emit('user', {
+          // Client 端 送出 User 事件
+          text: inputVal,
+          count: count,
+        });
+      });
+    </script>
+  </body>
+</html>
