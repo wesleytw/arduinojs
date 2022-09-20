@@ -1,44 +1,63 @@
+// import { Server } from 'Socket.IO'
 const Server = require('socket.io')
-const five = require('johnny-five');
-let io
+var five = require('johnny-five')
+
+// var board = new five.Board({ port: "/dev/tty.usbserial-10" })
+var board = new five.Board({ port: "/dev/cu.usbserial-110" })
+
+function update(res) {
+  const io = new Server(res.socket.server)
+  res.socket.server.io = io
+  //board.on包io.on會搶頻  比較慢ready
+  let led = undefined
+  let isReady = false
+  board.on('ready', function () {
+    console.log("ready")
+    isReady = true
+    led = new five.Led(13);
+    led.off();
+  });
+  io.on('connection', function (socket) {
+    console.log("connected")
+    socket.on('input-change', function (data) {
+      socket.broadcast.emit('update-input', data)
+      console.log(data);
+      if (data != false && isReady != false) {
+        led.toggle();
+      }
+    });
+  });
+  // });
+}
+
 const SocketHandler = (req, res) => {
   if (res.socket.server.io) {
     console.log('Socket is already running')
+    update(res)
   } else {
     console.log('Socket is initializing')
-    io = new Server(res.socket.server)
-    res.socket.server.io = io
+    update(res)
+    // const io = new Server(res.socket.server)
+    // res.socket.server.io = io
+    // // board.on('ready', function () {
+    // //   console.log("ready")
 
-    // io.on('connection', socket => {
-    //   socket.on('input-change', msg => {
-    //     socket.broadcast.emit('update-input', msg)
-    //   })
-    // })
-  }
-  if (res.socket.server.io) {
-    const board = new five.Board({ port: "/dev/tty.usbserial-110" });
-    // johnny-five event when johnny init ready
-    board.on('ready', function () {
-      // 指定LED output 為 Arduino 第13腳
-      const led = new five.Led(13);
-      // led 初始化狀態
-      led.off();
-      // socket連線成功時，開始偵聽前端的 swEvent 事件
-      io.on('connection', function (socket) {
-        socket.on('input-change', function (data) {
-          //如果前端有動作則呼叫 johnny-five led.toggle() 切換led狀態
-          console.log(data);
-          if (data != false) {
-            led.toggle();
-          }
-        });
-      });
-    });
+    // //   var led = new five.Led(13);
+    // //   led.off();
+    //   io.on('connection', function (socket) {
+    //     console.log("connected")
+    //     socket.on('input-change', function (data) {
+    //       socket.broadcast.emit('update-input', data)
+    //       console.log(data);
+    //       if (data != false) {
+    //         led.toggle();
+    //       }
+    //     });
+    //   });
+    // // });
+
   }
   res.end()
 }
 
 export default SocketHandler
-
-
-// https://ithelp.ithome.com.tw/articles/10221822

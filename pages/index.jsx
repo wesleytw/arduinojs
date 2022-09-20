@@ -1,32 +1,34 @@
 import Head from 'next/head'
 import Image from 'next/image'
-// import { goo } from './api/arduino'
+import { useEffect, useState } from 'react'
+import io from 'socket.io-client'
+
+let socket;
 
 const Home = () => {
+  const [input, setInput] = useState('')
 
+  useEffect(() => {
+    socketInitializer()
+  }, [])
+  const socketInitializer = async () => {
+    await fetch('/api/socket');
+    socket = io()
 
-  const callback = async (i) => {
-    try {
-      const res = await fetch("/api/arduino"
-        , {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            "name": "wesley",
-            "job": i,
-            "job2": "zion residentdfgx",
-            'idv_task_id': 'env local -qwea',
-            "time": Date.now()
-          })
-        }
-      );
-      const data = await res.text();
-      console.log("sd", process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
-    } catch (error) {
-    }
-  };
+    socket.on('connect', () => {
+      console.log('connected')
+    })
+
+    socket.on('update-input', msg => {
+      setInput(msg)
+    })
+  }
+
+  const onChangeHandler = (e) => {
+    setInput(e.target.value)
+    socket.emit('input-change', e.target.value)
+  }
+
 
 
   return (
@@ -45,13 +47,6 @@ const Home = () => {
           <div class="right">R</div>
         </div>
       </div> */}
-
-      {/* <button onClick={() => go(50)}>50</button>
-      <button onClick={() => go(500)}>500</button>
-      <button onClick={() => go(1000)}>1000</button> */}
-      <button className=" bg-teal-400" onClick={() => callback(500)}>500</button>
-      <button className=" bg-teal-400" onClick={() => callback(50)}>50</button>
-
       <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
         <h1 className="text-6xl font-bold">
           Welcome to{' '}
@@ -77,36 +72,17 @@ const Home = () => {
               Find in-depth information about Next.js features and its API.
             </p>
           </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+          <div className=" text-slate-900">
+            <p className=" text-blue-500">On-board LED</p>
+            <input
+              placeholder="Type something"
+              value={input}
+              onChange={onChangeHandler}
+              className="h-20 border border-gray-400 rounded-lg"
+              type="number"
+            />
+            {/* <input type="checkbox" id="cbox1" value="first_checkbox" /> */}
+          </div>
         </div>
       </main>
 

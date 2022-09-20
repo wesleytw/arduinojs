@@ -31,17 +31,19 @@ const Home = () => {
 
   return (
     <div className=" mt-96">
-
-      {/* <div class="space3d">
-      <div class="box">
-        <div class="front">F</div>
-        <div class="back">B</div>
-        <div class="top">T</div>
-        <div class="bottom">BT</div>
-        <div class="left">L</div>
-        <div class="right">R</div>
+      <div className=" w-60 h-60">
+        <div class="space3d">
+          <div class="box">
+            <div class="front">F</div>
+            <div class="back">B</div>
+            <div class="top">T</div>
+            <div class="bottom">BT</div>
+            <div class="left">L</div>
+            <div class="right">R</div>
+          </div>
+        </div>
       </div>
-    </div> */}
+      {/*     
       <div class="space-3d">
         <div class="space-3d2">
           <div class="box box1">
@@ -332,8 +334,9 @@ const Home = () => {
           </div>
         </div>
       </div>
+       */}
       {/* <a href="http://csscoke.com" class="coke">Pure CSS3 3D<br>Pocket Rubik's Cube<br><span>by CSS 可樂 / cssCoke.com</span>	</a> */}
-  </div>
+    </div>
   )
 }
 
