@@ -37,6 +37,11 @@ const Home = () => {
         onChange={onChangeHandler}
       />
       {/* <input type="checkbox" id="cbox1" value="first_checkbox" /> */}
+      <div className=" h-96 bg-black w-16"></div>
+      <div className=" h-96 bg-black w-16"></div>
+      <div className=" h-96 bg-black w-16"></div>
+      <div className=" h-96 bg-black w-16"></div>
+
     </div>
   )
 }
