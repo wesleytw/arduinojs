@@ -3,7 +3,7 @@ const Server = require('socket.io')
 var five = require('johnny-five')
 const { Motor, IMU } = require("johnny-five");
 // var board = new five.Board({ port: "/dev/tty.usbserial-10" })
-var board = new five.Board({ port: "/dev/cu.usbserial-10" })
+var board = new five.Board({ port: "/dev/cu.usbserial-110" })
 let sock
 function update(res) {
   const io = new Server(res.socket.server)
@@ -24,8 +24,8 @@ function update(res) {
     });
     motor = new Motor({
       pins: {
-        pwm: 8,
-        dir: 9
+        pwm: 5,
+        dir: 6
       }
     });
     motor.on("start", () => {
@@ -38,20 +38,21 @@ function update(res) {
 
     motor.on("forward", () => {
       console.log(`forward: ${Date.now()}`);
-      board.wait(5000, () => motor.reverse(50));
+      // board.wait(5000, () => motor.reverse(50));
     });
 
     motor.on("reverse", () => {
       console.log(`reverse: ${Date.now()}`);
-      board.wait(5000, motor.stop);
+      // board.wait(5000, motor.stop);
     });
-    motor.forward(255);
+    // motor.forward(255);
+    // motor.stop()
+
 
     const imu = new IMU({
       controller: "MPU6050"
     });
     imu.on("change", () => {
-
       if (sock) sock.emit('updateMpu', {
         celsius: imu.thermometer.celsius,
         aroll: imu.accelerometer.roll,
@@ -65,27 +66,6 @@ function update(res) {
         groll: imu.gyro.roll,
         gyaw: imu.gyro.yaw,
       })
-      // console.log("Accelerometer");
-      // console.log("  x            : ", imu.accelerometer.x);
-      // console.log("  y            : ", imu.accelerometer.y);
-      // console.log("  z            : ", imu.accelerometer.z);
-      // console.log("  pitch        : ", imu.accelerometer.pitch);
-      // console.log("  roll         : ", imu.accelerometer.roll);
-      // console.log("  acceleration : ", imu.accelerometer.acceleration);
-      // console.log("  inclination  : ", imu.accelerometer.inclination);
-      // console.log("  orientation  : ", imu.accelerometer.orientation);
-      // console.log("--------------------------------------");
-
-      // console.log("Gyroscope");
-      // console.log("  x            : ", imu.gyro.x);
-      // console.log("  y            : ", imu.gyro.y);
-      // console.log("  z            : ", imu.gyro.z);
-      // console.log("  pitch        : ", imu.gyro.pitch);
-      // console.log("  roll         : ", imu.gyro.roll);
-      // console.log("  yaw          : ", imu.gyro.yaw);
-      // console.log("  rate         : ", imu.gyro.rate);
-      // console.log("  isCalibrated : ", imu.gyro.isCalibrated);
-      // console.log("--------------------------------------");
     });
   });
 
@@ -98,15 +78,33 @@ function update(res) {
       socket.broadcast.emit('updateLed', data)
       console.log(data);
       if (isReady != false) {
-        console.log("data", data);
+        // console.log("data", data);
         led.toggle();
       }
     });
     socket.on('servoChange', function (data) {
       socket.broadcast.emit('updateServo', data)
-      console.log(typeof data, data);
+      // console.log(typeof data, data);
       if (data && isReady != false) {
         servo.to(+(data));
+      }
+    });
+    socket.on('motorChange', function (data) {
+      // socket.broadcast.emit('updateMotor', data)
+      console.log("motorChange",typeof data, data);
+      if (motor&&data && isReady != false) {
+        if (data.act == "forward") {
+          console.log("io f")
+          // motor.forward(data.vel);
+          board.wait(10, () => motor.forward(data.vel))
+        } else if (data.act == "reverse") {
+          console.log("io r")
+          // motor.reverse(data.vel);
+          board.wait(10, () => motor.reverse(data.vel))
+        } else if (data.act == "stop") {
+          console.log("io s")
+          board.wait(10, () => motor.stop())
+        }
       }
     });
   });
