@@ -1132,6 +1132,11 @@ finalhandler@1.2.0:
     statuses "2.0.1"
     unpipe "~1.0.0"
 
+fingerpose@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/fingerpose/-/fingerpose-0.1.0.tgz#b39af26b2fd4f01c3ad7fadf4a74dd07e34b728c"
+  integrity sha512-OXIRuRTgukBOo4xUO+vPchzHftZOPxO7VRh4HDjTg5NGr4gSkiY+LQShjsKAzmpRiRdmTgDh0dNsGpWa1Jsx3Q==
+
 firmata-io@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/firmata-io/-/firmata-io-2.3.0.tgz#6811563e75af4e876a789285b30d6d8a803c45c8"
