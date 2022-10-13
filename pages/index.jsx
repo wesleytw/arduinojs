@@ -3,9 +3,9 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import io from 'socket.io-client'
 import { BsArrowLeftCircle, BsArrowRightCircle, BsStopCircle } from 'react-icons/bs'
-// import * as tf from '@tensorflow/tfjs'
-// import * as handpose from '@tensorflow-models/handpose'
-// import Webcam from 'react-webcam'
+import * as tf from '@tensorflow/tfjs'
+import * as handpose from '@tensorflow-models/handpose'
+import Webcam from 'react-webcam'
 
 
 let socket
@@ -17,9 +17,10 @@ const Home = () => {
   const [vmotor, setVmotor] = useState('0')
   const [motor, setMotor] = useState()
   const [mpu, setmpu] = useState({ celsius: 0, gx: 0, gy: 0, gz: 0, gpitch: { angle: 0 }, groll: { angle: 0 }, gyaw: { angle: 0 } })
+  const [openCam, setopenCam] = useState(false)
 
   useEffect(() => {
-    socketInitializer()
+    // socketInitializer()
   }, [])
 
   const socketInitializer = async () => {
@@ -75,9 +76,11 @@ const Home = () => {
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <button onClick={() => setopenCam(prev => !prev)}>open?{`${openCam}`}</button>
+      {openCam && <Webcam className="w-64 border-lg bg-teal-300" />}
+<canvas></canvas>
       <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
         <h1 className=" mt-10 text-6xl font-bold">
-          {/* Welcome to{' '} */}
           CubeSat{' '}
           <span className="text-blue-600" >
             Dashboard
@@ -157,7 +160,7 @@ const Home = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by
           <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
         </a>
       </footer>
