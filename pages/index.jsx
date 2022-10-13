@@ -3,6 +3,11 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import io from 'socket.io-client'
 import { BsArrowLeftCircle, BsArrowRightCircle, BsStopCircle } from 'react-icons/bs'
+// import * as tf from '@tensorflow/tfjs'
+// import * as handpose from '@tensorflow-models/handpose'
+// import Webcam from 'react-webcam'
+
+
 let socket
 
 const Home = () => {

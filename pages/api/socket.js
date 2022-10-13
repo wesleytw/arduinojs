@@ -3,7 +3,7 @@ const Server = require('socket.io')
 var five = require('johnny-five')
 const { Motor, IMU } = require("johnny-five");
 // var board = new five.Board({ port: "/dev/tty.usbserial-10" })
-var board = new five.Board({ port: "/dev/cu.usbserial-110" })
+var board = new five.Board({ port: "/dev/cu.usbserial-10" })
 let sock
 function update(res) {
   const io = new Server(res.socket.server)
